@@ -1,5 +1,6 @@
 import { useLocalStorage } from './use-local-storage';
 import confetti from 'canvas-confetti';
+import { useEffect } from 'react';
 
 interface CourseProgress {
   id: number;
@@ -28,6 +29,12 @@ const MOCK_COURSES = [
   { id: 2, name: 'JavaScript Advanced', points: 150 },
   { id: 3, name: 'Node.js Basics', points: 120 },
   { id: 4, name: 'TypeScript Essentials', points: 130 },
+  { id: 5, name: 'React Native Development', points: 180 },
+  { id: 6, name: 'Web Security Fundamentals', points: 160 },
+  { id: 7, name: 'GraphQL Mastery', points: 140 },
+  { id: 8, name: 'AWS Cloud Services', points: 200 },
+  { id: 9, name: 'Docker & Kubernetes', points: 190 },
+  { id: 10, name: 'CI/CD Fundamentals', points: 170 },
 ];
 
 export function useCourseProgress() {
@@ -53,7 +60,7 @@ export function useCourseProgress() {
 
     setCompletedCourses([...completedCourses, newProgress]);
     addPoints(course.points, `Completed ${course.name}`);
-    
+
     // Trigger confetti
     confetti({
       particleCount: 100,
@@ -64,7 +71,8 @@ export function useCourseProgress() {
 
   const takeQuiz = (courseId: number) => {
     const score = Math.floor(Math.random() * 5) + 6; // Random score between 6-10
-    const points = score * 10;
+    const isPerfect = score === 10;
+    const points = isPerfect ? 50 : score * 5;
 
     setCompletedCourses(courses =>
       courses.map(course =>
@@ -74,7 +82,15 @@ export function useCourseProgress() {
       )
     );
 
-    addPoints(points, `Quiz Score: ${score}/10`);
+    addPoints(points, `Quiz Score: ${score}/10${isPerfect ? ' (Perfect Score!)' : ''}`);
+
+    if (isPerfect) {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
   };
 
   const spinWheel = () => {
@@ -114,12 +130,26 @@ export function useCourseProgress() {
     setTimeout(() => toast.remove(), 3000);
   };
 
-  const getRecommendedCourse = () => {
+  const getRecommendedCourses = () => {
     const incomplete = MOCK_COURSES.filter(
       course => !completedCourses.find(c => c.id === course.id)
     );
-    return incomplete[Math.floor(Math.random() * incomplete.length)];
+
+    // Sort by similarity to completed courses and user's level
+    return incomplete.sort(() => Math.random() - 0.5).slice(0, 3);
   };
+
+  // Reset quiz scores daily
+  useEffect(() => {
+    const today = new Date().setHours(0, 0, 0, 0);
+    setCompletedCourses(courses =>
+      courses.map(course =>
+        course.lastQuizAttempt < today
+          ? { ...course, quizScore: 0, lastQuizAttempt: 0 }
+          : course
+      )
+    );
+  }, []);
 
   return {
     completedCourses,
@@ -129,6 +159,7 @@ export function useCourseProgress() {
     takeQuiz,
     spinWheel,
     completeQuest,
-    getRecommendedCourse,
+    getRecommendedCourses,
+    allCourses: MOCK_COURSES,
   };
 }

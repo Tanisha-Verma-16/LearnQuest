@@ -1,18 +1,20 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useCourseProgress } from '@/hooks/use-course-progress';
-import { Trophy, BookOpen, Brain } from 'lucide-react';
+import { Trophy, BookOpen, Brain, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function CompletedCourses() {
   const { 
     completedCourses, 
     takeQuiz, 
-    getRecommendedCourse,
+    getRecommendedCourses,
+    allCourses,
+    completeCourse,
     totalPoints 
   } = useCourseProgress();
 
-  const recommendedCourse = getRecommendedCourse();
+  const recommendedCourses = getRecommendedCourses();
 
   return (
     <Card className="p-6">
@@ -26,7 +28,7 @@ export function CompletedCourses() {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
@@ -48,38 +50,57 @@ export function CompletedCourses() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="font-medium">
+                    <div className="font-medium mb-2">
                       Quiz Score: {course.quizScore}/10
+                      {course.quizScore === 10 && (
+                        <span className="ml-2 text-yellow-500">★</span>
+                      )}
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => takeQuiz(course.id)}
                     >
-                      Retake Quiz
+                      {course.quizScore > 0 ? 'Retake Quiz' : 'Take Quiz'}
                     </Button>
                   </div>
                 </div>
               </motion.div>
             ))}
+
+            {completedCourses.length === 0 && (
+              <div className="text-center text-muted-foreground py-8">
+                No completed courses yet. Start learning!
+              </div>
+            )}
           </div>
         </div>
 
-        {recommendedCourse && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Brain className="h-5 w-5" />
-              Recommended Next Course
-            </h3>
-            <Card className="p-4 bg-primary/5">
-              <h4 className="font-medium">{recommendedCourse.name}</h4>
-              <p className="text-sm text-muted-foreground mb-4">
-                Based on your completed courses
-              </p>
-              <Button>Start Course</Button>
-            </Card>
+        <div>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Brain className="h-5 w-5" />
+            Recommended Courses
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {recommendedCourses.map((course) => (
+              <Card key={course.id} className="p-4">
+                <h4 className="font-medium mb-2">{course.name}</h4>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-sm text-muted-foreground">
+                    {course.points} points
+                  </span>
+                  <Button 
+                    size="sm"
+                    className="w-24"
+                    onClick={() => completeCourse(course.id)}
+                  >
+                    Start <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </Card>
   );
