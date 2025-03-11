@@ -5,7 +5,7 @@ import createMemoryStore from "memorystore";
 
 const MemoryStore = createMemoryStore(session);
 
-// Example challenges data
+// Define a rich set of challenges
 const initialChallenges: Challenge[] = [
   {
     id: 1,
@@ -79,6 +79,16 @@ const initialChallenges: Challenge[] = [
   }
 ];
 
+// Initialize with some sample users for the leaderboard
+const initialUsers: InsertUser[] = [
+  { username: "sarah_dev", displayName: "Sarah Dev", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1511216335778-7cb8f49fa7a3" },
+  { username: "tech_master", displayName: "Tech Master", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80" },
+  { username: "code_ninja", displayName: "Code Ninja", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f" },
+  { username: "web_wizard", displayName: "Web Wizard", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1715615685666-882710b534f9" },
+  { username: "data_guru", displayName: "Data Guru", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1633267379178-b0c2078e321e" },
+  { username: "ai_explorer", displayName: "AI Explorer", password: "hashed_password", avatarUrl: "https://images.unsplash.com/photo-1664464168739-676285e4bf89" },
+];
+
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private badges: Map<number, Badge>;
@@ -102,6 +112,18 @@ export class MemStorage implements IStorage {
     // Initialize challenges
     initialChallenges.forEach(challenge => {
       this.challenges.set(challenge.id, challenge);
+    });
+
+    // Initialize sample users with random points
+    initialUsers.forEach((userData, index) => {
+      const points = Math.floor(Math.random() * 2000) + 500;
+      const user: User = {
+        ...userData,
+        id: this.currentId++,
+        points,
+        level: Math.floor(points / 1000) + 1,
+      };
+      this.users.set(user.id, user);
     });
   }
 
