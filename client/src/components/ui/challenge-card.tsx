@@ -6,6 +6,8 @@ import { Badge } from './badge';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { useAIAdaptation } from '@/hooks/use-ai-adaptation';
+import React from 'react';
 
 interface ChallengeCardProps {
   challenge: Challenge;
@@ -14,10 +16,28 @@ interface ChallengeCardProps {
 
 export function ChallengeCard({ challenge, userLevel }: ChallengeCardProps) {
   const { toast } = useToast();
+  const { addCompletionTime, updateSuccessRate, performance } = useAIAdaptation();
   const isLocked = userLevel < challenge.requiredLevel;
+
+  const startTime = React.useRef<number>();
 
   const completeMutation = useMutation({
     mutationFn: async () => {
+      // Simulate random completion time between 30-90 seconds
+      const completionTime = startTime.current 
+        ? (Date.now() - startTime.current) / 1000
+        : Math.random() * 60 + 30;
+
+      // Simulate success rate based on difficulty
+      const success = Math.random() > (performance.lastDifficulty * 0.2);
+
+      addCompletionTime(completionTime);
+      updateSuccessRate(success);
+
+      if (!success) {
+        throw new Error("Challenge incomplete. Try again!");
+      }
+
       await apiRequest('POST', `/api/challenges/${challenge.id}/complete`);
     },
     onSuccess: () => {
@@ -28,7 +48,21 @@ export function ChallengeCard({ challenge, userLevel }: ChallengeCardProps) {
         description: `You earned ${challenge.points} points!`,
       });
     },
+    onError: (error: Error) => {
+      toast({
+        title: 'Challenge failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
   });
+
+  const handleStart = () => {
+    startTime.current = Date.now();
+    completeMutation.mutate();
+  };
+
+  const adjustedPoints = Math.round(challenge.points * performance.lastDifficulty);
 
   return (
     <motion.div
@@ -40,7 +74,7 @@ export function ChallengeCard({ challenge, userLevel }: ChallengeCardProps) {
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-xl font-bold">{challenge.title}</h3>
           <Badge variant={isLocked ? 'secondary' : 'default'}>
-            {challenge.points} points
+            {adjustedPoints} points
           </Badge>
         </div>
 
@@ -49,11 +83,13 @@ export function ChallengeCard({ challenge, userLevel }: ChallengeCardProps) {
         <Button
           className="w-full"
           disabled={isLocked || completeMutation.isPending}
-          onClick={() => completeMutation.mutate()}
+          onClick={handleStart}
         >
           {isLocked
             ? `Unlock at Level ${challenge.requiredLevel}`
-            : 'Complete Challenge'}
+            : completeMutation.isPending
+            ? 'Working...'
+            : 'Start Challenge'}
         </Button>
       </Card>
     </motion.div>
