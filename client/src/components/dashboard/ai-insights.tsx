@@ -9,7 +9,9 @@ export function AIInsights() {
   const { performance, insights } = useAIAdaptation();
 
   const getBestStudyTime = () => {
-    const { studyPattern } = performance;
+    const { studyPattern } = performance || { studyPattern: { morningRate: 0, afternoonRate: 0, eveningRate: 0 } };
+    if (!studyPattern) return 'afternoon';
+
     const times = [
       { time: 'morning', rate: studyPattern.morningRate },
       { time: 'afternoon', rate: studyPattern.afternoonRate },
@@ -29,10 +31,10 @@ export function AIInsights() {
         <div>
           <div className="flex justify-between text-sm mb-2">
             <span>Learning Efficiency</span>
-            <span>{Math.round(performance.successRate * 100)}%</span>
+            <span>{Math.round((performance?.successRate || 0) * 100)}%</span>
           </div>
           <Progress 
-            value={performance.successRate * 100} 
+            value={(performance?.successRate || 0) * 100} 
             className="h-2"
           />
         </div>
@@ -50,14 +52,14 @@ export function AIInsights() {
             <h3 className="text-sm font-medium mb-2">Challenge Level</h3>
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              <span>{Math.round(performance.lastDifficulty * 10) / 10}x</span>
+              <span>{Math.round((performance?.lastDifficulty || 1) * 10) / 10}x</span>
             </div>
           </div>
 
           <div className="p-4 rounded-lg bg-muted/50">
             <h3 className="text-sm font-medium mb-2">Recent Success</h3>
-            <Badge variant={performance.successRate > 0.7 ? "default" : "secondary"}>
-              {performance.successRate > 0.7 ? "High" : "Improving"}
+            <Badge variant={(performance?.successRate || 0) > 0.7 ? "default" : "secondary"}>
+              {(performance?.successRate || 0) > 0.7 ? "High" : "Improving"}
             </Badge>
           </div>
         </div>
@@ -70,7 +72,7 @@ export function AIInsights() {
 
           <div className="space-y-3">
             <AnimatePresence>
-              {insights.map((insight, index) => (
+              {insights?.map((insight, index) => (
                 <motion.div
                   key={insight.timestamp}
                   initial={{ opacity: 0, x: -20 }}
