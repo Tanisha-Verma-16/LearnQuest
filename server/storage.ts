@@ -5,6 +5,80 @@ import createMemoryStore from "memorystore";
 
 const MemoryStore = createMemoryStore(session);
 
+// Example challenges data
+const initialChallenges: Challenge[] = [
+  {
+    id: 1,
+    title: "React Components Basics",
+    description: "Create a reusable button component with customizable styles",
+    points: 100,
+    requiredLevel: 1,
+  },
+  {
+    id: 2,
+    title: "State Management",
+    description: "Implement a counter using React useState hook",
+    points: 150,
+    requiredLevel: 1,
+  },
+  {
+    id: 3,
+    title: "API Integration",
+    description: "Fetch and display data from a REST API",
+    points: 200,
+    requiredLevel: 2,
+  },
+  {
+    id: 4,
+    title: "Form Validation",
+    description: "Create a form with custom validation logic",
+    points: 250,
+    requiredLevel: 2,
+  },
+  {
+    id: 5,
+    title: "Authentication Flow",
+    description: "Implement a complete login/register system",
+    points: 300,
+    requiredLevel: 3,
+  },
+  {
+    id: 6,
+    title: "Real-time Updates",
+    description: "Build a real-time chat interface using WebSocket",
+    points: 350,
+    requiredLevel: 3,
+  },
+  {
+    id: 7,
+    title: "Performance Optimization",
+    description: "Optimize a slow-rendering component using useMemo and useCallback",
+    points: 400,
+    requiredLevel: 4,
+  },
+  {
+    id: 8,
+    title: "Custom Hook Creation",
+    description: "Create a custom hook for handling form state",
+    points: 450,
+    requiredLevel: 4,
+  },
+  {
+    id: 9,
+    title: "Animation Implementation",
+    description: "Add smooth transitions and animations to a component",
+    points: 500,
+    requiredLevel: 5,
+  },
+  {
+    id: 10,
+    title: "Testing Mastery",
+    description: "Write comprehensive tests for a React component",
+    points: 550,
+    requiredLevel: 5,
+  }
+];
+
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private badges: Map<number, Badge>;
@@ -23,6 +97,11 @@ export class MemStorage implements IStorage {
     this.currentId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000,
+    });
+
+    // Initialize challenges
+    initialChallenges.forEach(challenge => {
+      this.challenges.set(challenge.id, challenge);
     });
   }
 
@@ -46,7 +125,7 @@ export class MemStorage implements IStorage {
   async updateUserPoints(userId: number, points: number): Promise<User> {
     const user = await this.getUser(userId);
     if (!user) throw new Error("User not found");
-    
+
     user.points += points;
     user.level = Math.floor(user.points / 1000) + 1;
     this.users.set(userId, user);

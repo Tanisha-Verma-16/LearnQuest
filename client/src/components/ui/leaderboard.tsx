@@ -12,6 +12,11 @@ const MOCK_USERS: User[] = [
   { id: 3, username: "code_ninja", displayName: "Code Ninja", avatarUrl: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f", points: 1800, level: 2, password: "" },
   { id: 4, username: "web_wizard", displayName: "Web Wizard", avatarUrl: "https://images.unsplash.com/photo-1715615685666-882710b534f9", points: 1500, level: 2, password: "" },
   { id: 5, username: "data_guru", displayName: "Data Guru", avatarUrl: "https://images.unsplash.com/photo-1633267379178-b0c2078e321e", points: 1200, level: 2, password: "" },
+  { id: 6, username: "ai_explorer", displayName: "AI Explorer", avatarUrl: "https://images.unsplash.com/photo-1664464168739-676285e4bf89", points: 1100, level: 2, password: "" },
+  { id: 7, username: "cloud_master", displayName: "Cloud Master", avatarUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d", points: 950, level: 1, password: "" },
+  { id: 8, username: "ui_designer", displayName: "UI Designer", avatarUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d", points: 850, level: 1, password: "" },
+  { id: 9, username: "security_pro", displayName: "Security Pro", avatarUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d", points: 800, level: 1, password: "" },
+  { id: 10, username: "mobile_dev", displayName: "Mobile Dev", avatarUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d", points: 750, level: 1, password: "" },
 ];
 
 export function Leaderboard() {
