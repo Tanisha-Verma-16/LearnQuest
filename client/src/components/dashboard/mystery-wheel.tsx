@@ -27,7 +27,7 @@ export function MysteryWheel() {
         <div className="text-center">
           <Button
             size="lg"
-            className="w-full h-32 rounded-full"
+            className="w-full h-32 rounded-full transition-transform hover:scale-105 hover:shadow-lg"
             disabled={!canSpin}
             onClick={handleSpin}
           >
@@ -46,7 +46,7 @@ export function MysteryWheel() {
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-primary/5 p-3 rounded-lg flex items-center gap-2"
+                className="bg-muted/50 p-3 rounded-lg flex items-center gap-2"
               >
                 <div className="h-2 w-2 bg-primary rounded-full" />
                 <span>{quest}</span>
