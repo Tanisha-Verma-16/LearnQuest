@@ -5,9 +5,19 @@ import { Avatar, AvatarImage, AvatarFallback } from './avatar';
 import { Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// Mock leaderboard data for demonstration
+const MOCK_USERS: User[] = [
+  { id: 1, username: "sarah_dev", displayName: "Sarah Dev", avatarUrl: "https://images.unsplash.com/photo-1511216335778-7cb8f49fa7a3", points: 2500, level: 3, password: "" },
+  { id: 2, username: "tech_master", displayName: "Tech Master", avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80", points: 2200, level: 3, password: "" },
+  { id: 3, username: "code_ninja", displayName: "Code Ninja", avatarUrl: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f", points: 1800, level: 2, password: "" },
+  { id: 4, username: "web_wizard", displayName: "Web Wizard", avatarUrl: "https://images.unsplash.com/photo-1715615685666-882710b534f9", points: 1500, level: 2, password: "" },
+  { id: 5, username: "data_guru", displayName: "Data Guru", avatarUrl: "https://images.unsplash.com/photo-1633267379178-b0c2078e321e", points: 1200, level: 2, password: "" },
+];
+
 export function Leaderboard() {
   const { data: users } = useQuery<User[]>({
     queryKey: ['/api/leaderboard'],
+    placeholderData: MOCK_USERS,
   });
 
   return (

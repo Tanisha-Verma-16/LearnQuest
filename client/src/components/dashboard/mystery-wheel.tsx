@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 
 export function MysteryWheel() {
   const { mysteryWheel, spinWheel, completeQuest } = useCourseProgress();
-  const canSpin = new Date().setHours(0, 0, 0, 0) !== mysteryWheel.lastSpinDate;
 
   const handleSpin = () => {
     const quest = spinWheel();
@@ -28,10 +27,9 @@ export function MysteryWheel() {
           <Button
             size="lg"
             className="w-full h-32 rounded-full transition-transform hover:scale-105 hover:shadow-lg"
-            disabled={!canSpin}
             onClick={handleSpin}
           >
-            {canSpin ? 'Spin the Wheel!' : 'Come back tomorrow!'}
+            Spin the Wheel!
           </Button>
         </div>
 

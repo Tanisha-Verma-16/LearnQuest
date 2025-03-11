@@ -94,14 +94,9 @@ export function useCourseProgress() {
   };
 
   const spinWheel = () => {
-    const today = new Date().setHours(0, 0, 0, 0);
-    if (mysteryWheel.lastSpinDate === today) {
-      return null;
-    }
-
     const randomQuest = QUESTS[Math.floor(Math.random() * QUESTS.length)];
     setMysteryWheel({
-      lastSpinDate: today,
+      ...mysteryWheel,
       availableQuests: [...mysteryWheel.availableQuests, randomQuest],
       completedQuests: mysteryWheel.completedQuests,
     });
