@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Challenge } from '@shared/schema';
 import { UserProgress } from '@/components/dashboard/user-progress';
 import { AIInsights } from '@/components/dashboard/ai-insights';
+import { CompletedCourses } from '@/components/dashboard/completed-courses';
+import { MysteryWheel } from '@/components/dashboard/mystery-wheel';
 import { Leaderboard } from '@/components/ui/leaderboard';
 import { ChallengeCard } from '@/components/ui/challenge-card';
 import { Chatbot } from '@/components/ui/chatbot';
@@ -21,6 +23,7 @@ export default function HomePage() {
         <div className="space-y-8">
           <UserProgress />
           <AIInsights />
+          <CompletedCourses />
 
           <div>
             <h2 className="text-3xl font-bold mb-6">Challenges</h2>
@@ -36,7 +39,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        <Leaderboard />
+        <div className="space-y-8">
+          <Leaderboard />
+          <MysteryWheel />
+        </div>
       </div>
 
       <Chatbot />
